@@ -6,6 +6,10 @@ import LoginPage from './pages/loginPage';
 import RegisterPage from './pages/registerPage';
 // import ExplorePage from './pages/explorePage';
 
+import axios from "axios"
+
+axios.defaults.baseURL = 'http://localhost:4000'
+
 function App() {
 
   return (

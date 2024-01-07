@@ -1,5 +1,7 @@
 import {Link} from "react-router-dom"
 import { useState } from "react"
+import axios from 'axios'
+
 
 export default function RegisterPage() {
 
@@ -8,9 +10,19 @@ export default function RegisterPage() {
     const [password, setPassword] = useState('')
     const [username, setUsername] = useState('')
 
+    function registerUser(ev) {
+        ev.preventDefault()
+        axios.post('/register', {
+            name,
+            email,
+            password,
+            username
+        })
+    }
+
     return (
         <div className="mt-4">
-            <form>
+            <form onSubmit={registerUser}>
                 <input type="email" placeholder={"email"} 
                 value={email} 
                 onChange={ev => setEmail(ev.target.value)} />
@@ -18,14 +30,14 @@ export default function RegisterPage() {
                 <input type="password" placeholder={"password"}
                 value={password} 
                 onChange={ev => setPassword(ev.target.value)}/>
-
-                <input type="text" placeholder={"usernmae"}
-                value={username} 
-                onChange={ev => setUsername(ev.target.name)}/>
                 
-                <input type="text" placeholder={"fullname"}
+                <input type="text" placeholder={"name"}
                 value={name} 
                 onChange={ev => setName(ev.target.value)}/>
+
+                <input type="text" placeholder={"username"}
+                value={username} 
+                onChange={ev => setUsername(ev.target.value)}/>
 
                 <button>register</button>
 
