@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.postpage::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+  }
