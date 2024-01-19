@@ -95,7 +95,9 @@ export default function IndexPage() {
                         <div className="flex space-x-2 text-3xl">
                             <img className="h-10" src={logo} alt=""></img>
                             <div>
-                                Hey
+                                {!!user && (
+                                    <div>{user.name}</div>
+                                )}
                             </div>
                         </div>
                     </div>
