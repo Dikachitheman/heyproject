@@ -9,22 +9,30 @@ export default function LoginPage() {
     const [comments, setcomments] = useState('')
     const [username, setusername] = useState('')
     const [time, settime] = useState('')
+    const [imageURL, setimageURL] = useState('')
     const [redirect, setRedirect] = useState(false)
+    const [addedPhotos, setAddedPhotos] = useState('')
 
 
     async function handleLoginSubmit(ev) {
         ev.preventDefault()
-        const response = await axios.post('/posts', {username, time, caption, comments, likes})
-        setRedirect(true)
+        // const response = await axios.post('/posts', {username, time, caption, comments, likes, imageURL})
+        // setRedirect(true)
+        
+        const {data:filename} = await axios.post('/posts', {username, time, caption, comments, likes, imageURL})
+        setAddedPhotos(prev => {
+            return [...prev, filename]
+        })
+        setimageURL('')
     }
 
     if (redirect) {
-        return <Navigate to={'/'} />
+        return <Navigate to={'/2'} />
     }
 
     return (
         <div className="mt-4">
-            <form onSubmit={handleLoginSubmit}>
+            <form>
                 <input placeholder={"caption"}
                 value={caption} 
                 onChange={ev => setcaption(ev.target.value)}/>
@@ -45,9 +53,23 @@ export default function LoginPage() {
                 value={username} 
                 onChange={ev => setusername(ev.target.value)}/>
 
-                <button>login</button>
+                <input placeholder={"imageURL"}
+                value={imageURL} 
+                onChange={ev => setimageURL(ev.target.value)}/>
+
+                <button onClick={handleLoginSubmit}>add</button>
 
             </form>
+
+            <div>
+                {
+                    addedPhotos.length > 0 && addedPhotos.map((link, index) => (
+                        <div key={index}>
+                            <img src={'http://localhost:4000' + link} />
+                        </div>
+                    ))
+                }
+            </div>
         </div>
     )
 }

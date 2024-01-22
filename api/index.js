@@ -5,6 +5,8 @@ const { default: mongoose } = require('mongoose');
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
+const imageDownloader = require('image-downloader')
+
 require('dotenv').config()
 
 const User = require('./models/user.js')
@@ -16,7 +18,10 @@ app.use(cors({
 }))
 
 app.use(express.json())
-ap.use(cookieParser())
+app.use(cookieParser())
+app.use('/uploads', express.static('./uploads'))
+
+// console.log(app.use('/uploads', express.static(__dirname + '\\uploads')))
 
 // mongoose.connect(process.env.MONGO_URL)
 
@@ -91,17 +96,29 @@ app.get('/posts', async (req, res) => {
 
 app.post('/posts', async (req, res) => {
 
-     const {username, time, caption, comments, likes} = req.body
+    const {username, time, caption, comments, likes, imageURL} = req.body
 
-     const postAdd = await Posts.create({
-        username,
-        time,
-        caption,
-        comments,
-        likes
-     })
+    //  const postAdd = await Posts.create({
+    //     username,
+    //     time,
+    //     caption,
+    //     comments,
+    //     likes,
+    //     imageURL
+    //  })
 
-    res.json(postAdd)
+    // https://miro.medium.com/v2/resize:fit:828/format:webp/0*caMUvI_Yndd5w3S5
+    
+    let newName = Date.now() + '.jpg'
+
+    await imageDownloader.image({
+    url: imageURL,
+    dest: __dirname + "\\uploads\\" + newName
+    })
+
+    // res.json(postAdd)
+
+    res.json("\\uploads\\" + newName)
 })
 
 app.get('/profile', (req, res) => {
@@ -114,7 +131,7 @@ app.get('/profile', (req, res) => {
     } else {
         res.json(null)
     }
-    res.json({token})
+    // res.json({token})
 })
 
 app.listen(4000)

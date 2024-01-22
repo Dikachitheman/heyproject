@@ -6,7 +6,8 @@ const PostSchema = new Schema ({
     time: String,
     caption: String,
     comments: String,
-    likes: String
+    likes: String,
+    imageURL: String
 }) 
 
 const PostModel = mongoose.model('Posts', PostSchema)
