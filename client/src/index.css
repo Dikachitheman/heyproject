@@ -21,3 +21,23 @@
   'GRAD' 0,
   'opsz' 24
 }
+
+:root {
+  --gradient: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
+}
+
+.story {
+  background: var(--gradient);
+
+  border: 0;
+
+  padding: 0.1rem;
+}
+
+.story::before {
+  background: white;
+
+  padding: 0.2rem;
+
+  
+}

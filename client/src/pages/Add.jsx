@@ -65,7 +65,7 @@ export default function LoginPage() {
                 {
                     addedPhotos.length > 0 && addedPhotos.map((link, index) => (
                         <div key={index}>
-                            <img src={'http://localhost:4000' + link} />
+                            <img className=" w-[10rem] h-[10rem] object-cover rounded-2xl" src={'http://localhost:4000' + link} />
                         </div>
                     ))
                 }
