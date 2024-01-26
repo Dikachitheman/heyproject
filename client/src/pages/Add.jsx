@@ -27,7 +27,7 @@ export default function LoginPage() {
     }
 
     if (redirect) {
-        return <Navigate to={'/2'} />
+        return <Navigate to={'/'} />
     }
 
     return (

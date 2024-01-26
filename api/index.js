@@ -98,27 +98,28 @@ app.post('/posts', async (req, res) => {
 
     const {username, time, caption, comments, likes, imageURL} = req.body
 
-    //  const postAdd = await Posts.create({
-    //     username,
-    //     time,
-    //     caption,
-    //     comments,
-    //     likes,
-    //     imageURL
-    //  })
 
     // https://miro.medium.com/v2/resize:fit:828/format:webp/0*caMUvI_Yndd5w3S5
     
     let newName = Date.now() + '.jpg'
 
     await imageDownloader.image({
-    url: imageURL,
-    dest: __dirname + "\\uploads\\" + newName
+        url: imageURL,
+        dest: __dirname + "\\uploads\\" + newName
     })
 
     // res.json(postAdd)
 
     res.json("\\uploads\\" + newName)
+
+    const postAdd = await Posts.create({
+        username,
+        time,
+        caption,
+        comments,
+        likes,
+        imageURL: newName
+     })
 })
 
 app.get('/profile', (req, res) => {

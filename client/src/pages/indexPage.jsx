@@ -116,7 +116,7 @@ export default function IndexPage() {
 
                             <div className="flex space-x-8">
                                 {posts.map((post, index) => (
-                                    <Story key={index} user={post.username} likes={post.likes}/>
+                                    <Story key={index} user={post.username}/>
                                 ))}
                             </div>  
 
@@ -191,7 +191,9 @@ export default function IndexPage() {
 
 const Post = ({ username, time, comments, likes, caption, imageURL}) => {
 
-    const withPath = imageURL ? `../src/assets/${imageURL}` : skyJean
+    // const withPath = imageURL ? `../src/assets/${imageURL}` : skyJean
+
+    const withPath = imageURL? 'http://localhost:4000/uploads/' + imageURL : skyJean
 
     return (
         <div className="space-y-[0.4rem] font-[300]">
@@ -242,12 +244,12 @@ const Post = ({ username, time, comments, likes, caption, imageURL}) => {
 
 const Story = ({ user, imageURL, likes, timeStamp}) => {
 
-    const withPath = imageURL ? `../src/assets/${imageURL}` : dp3
+    // const withPath = imageURL ? `../src/assets/${imageURL}` : dp3
 
     return (
         <div className="grid justify-items-center text-[14px] text-stone-200 space-y-[-20px] font-[300] ">
             <div className="story h-fit rounded-full">
-                <img className=" h-[4rem] max-h-[4rem] w-[4rem] max-w-[4rem] rounded-full object-cover border-solid border-[0.2rem] border-black" src={withPath} alt="" />
+                <img className=" h-[4rem] max-h-[4rem] w-[4rem] max-w-[4rem] rounded-full object-cover border-solid border-[0.2rem] border-black" src={dp3} alt="" />
             </div>
             <div className=" h-fit truncate w-[70px]">
                 {user}
