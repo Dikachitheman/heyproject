@@ -2,7 +2,7 @@ import { useContext, useState } from "react"
 import {Link, Navigate} from "react-router-dom"
 import axios from 'axios'
 
-export default function LoginPage() {
+export default function AddPage( props ) {
 
     const [caption, setcaption] = useState('')
     const [likes, setlikes] = useState('')
@@ -14,12 +14,16 @@ export default function LoginPage() {
     const [addedPhotos, setAddedPhotos] = useState('')
 
 
-    async function handleLoginSubmit(ev) {
+    async function handleLoginSubmit(ev, myId) {
         ev.preventDefault()
         // const response = await axios.post('/posts', {username, time, caption, comments, likes, imageURL})
         // setRedirect(true)
         
-        const {data:filename} = await axios.post('/posts', {username, time, caption, comments, likes, imageURL})
+        const {data:filename} = await axios.post('/posts', { username, time, caption, comments, likes, imageURL})
+        
+        console.log("myId")
+        console.log(myId)
+
         setAddedPhotos(prev => {
             return [...prev, filename]
         })
@@ -30,9 +34,11 @@ export default function LoginPage() {
         return <Navigate to={'/'} />
     }
 
-    return (
-        <div className="mt-4">
-            <form>
+    return ( props.trigger ) ? (
+        <>
+        <div className=" z-30 absolute rounded-[10px] bg-neutral-800 h-[60vh] w-[30vw] top-[20vh] left-[35vw] flex items-center justify-center ">
+           
+            <form className="flex flex-col mt-[30px] text-black">
                 <input placeholder={"caption"}
                 value={caption} 
                 onChange={ev => setcaption(ev.target.value)}/>
@@ -57,8 +63,7 @@ export default function LoginPage() {
                 value={imageURL} 
                 onChange={ev => setimageURL(ev.target.value)}/>
 
-                <button onClick={handleLoginSubmit}>add</button>
-
+                <button onClick={(ev) => handleLoginSubmit(ev, props.myId)}>add</button>
             </form>
 
             <div>
@@ -70,6 +75,13 @@ export default function LoginPage() {
                     ))
                 }
             </div>
+
         </div>
-    )
+
+        <button className="h-[100vh] w-[100vw] bg-neutral-600 absolute top-0 left-0 opacity-30" onClick={() => props.setTrigger(false)}>
+
+        </button>
+
+        </>
+    ) : ""
 }

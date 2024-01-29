@@ -9,6 +9,8 @@ import dp1 from "../assets/OIP.jpeg"
 import dp2 from "../assets/qip2.jpeg"
 import dp3 from "../assets/qip3.jpeg"
 
+import AddPage from "./Add";
+
 import axios from "axios"
 
 export default function IndexPage() {
@@ -26,6 +28,16 @@ export default function IndexPage() {
         fetchData()
     }, [])
 
+    let usnm
+    let usid
+
+    if (user) {
+        usnm = user.name
+        usid = user._id
+    }
+
+    const [buttonPopup, setButtonPopup] = useState(false)
+
     return (
         <div className="bg-black w-screen h-screen text-white font-[300] text-[14px]">
             <div className="flex">
@@ -37,7 +49,7 @@ export default function IndexPage() {
                             <img className="h-10" src={logo} alt=""></img>
                             <div>
                                 {!!user && (
-                                    <div>{user.name}</div>
+                                    <div>{usnm}</div>
                                 )}
                             </div>
                         </div>
@@ -94,7 +106,12 @@ export default function IndexPage() {
                                 add_box
                             </span>
                             <div className="mt-[4px]">
-                                Create
+                                <button onClick={() => setButtonPopup(true)}>
+                                    Create
+                                </button>
+                                <div>
+                                    <AddPage trigger = {buttonPopup} setTrigger = {setButtonPopup} myId = {usid} />
+                                </div>
                             </div>
                         </div>
 
@@ -104,6 +121,7 @@ export default function IndexPage() {
                                 Profile
                             </div>
                         </div>
+
                     </div>
 
                 </div>

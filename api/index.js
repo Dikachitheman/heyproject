@@ -96,7 +96,7 @@ app.get('/posts', async (req, res) => {
 
 app.post('/posts', async (req, res) => {
 
-    const {username, time, caption, comments, likes, imageURL} = req.body
+    const { username, time, caption, comments, likes, imageURL} = req.body
 
 
     // https://miro.medium.com/v2/resize:fit:828/format:webp/0*caMUvI_Yndd5w3S5
