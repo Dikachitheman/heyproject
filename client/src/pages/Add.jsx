@@ -7,7 +7,7 @@ export default function AddPage( props ) {
     const [caption, setcaption] = useState('')
     const [likes, setlikes] = useState('')
     const [comments, setcomments] = useState('')
-    const [username, setusername] = useState('')
+    // const [username, setusername] = useState('')
     const [time, settime] = useState('')
     const [imageURL, setimageURL] = useState('')
     const [redirect, setRedirect] = useState(false)
@@ -19,10 +19,12 @@ export default function AddPage( props ) {
         // const response = await axios.post('/posts', {username, time, caption, comments, likes, imageURL})
         // setRedirect(true)
         
-        const {data:filename} = await axios.post('/posts', { username, time, caption, comments, likes, imageURL})
+        const {data:filename} = await axios.post('/posts', { myId, time, caption, comments, likes, imageURL})
         
         console.log("myId")
         console.log(myId)
+        // console.log(data)
+        console.log(filename)
 
         setAddedPhotos(prev => {
             return [...prev, filename]
@@ -55,9 +57,9 @@ export default function AddPage( props ) {
                 value={time} 
                 onChange={ev => settime(ev.target.value)}/>
 
-                <input placeholder={"username"}
+                {/* <input placeholder={"username"}
                 value={username} 
-                onChange={ev => setusername(ev.target.value)}/>
+                onChange={ev => setusername(ev.target.value)}/> */}
 
                 <input placeholder={"imageURL"}
                 value={imageURL} 

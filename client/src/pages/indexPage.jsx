@@ -128,16 +128,18 @@ export default function IndexPage() {
 
                 <div className="flex w-4/5 ">
 
-                    <div className="w-[70%] h-screen">
+                    <div className="w-[70%] h-[100vh]">
 
-                        <div className="postpage grid justify-items-center overflow-x-scroll h-[17%] pt-5">   
+                        <div className=" w-[100%] h-[17%] grid justify-items-center">
+                            <div className="postpage grid justify-items-center overflow-x-scroll pt-5 w-[80%]">   
 
-                            <div className="flex space-x-8">
-                                {posts.map((post, index) => (
-                                    <Story key={index} user={post.username}/>
-                                ))}
-                            </div>  
+                                <div className="flex space-x-8">
+                                    {posts.map((post, index) => (
+                                        <Story key={index} user={post.username}/>
+                                    ))}
+                                </div>  
 
+                            </div>
                         </div>
 
                         <div className="postpage h-[83%] overflow-y-scroll flex justify-center">
