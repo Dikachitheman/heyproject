@@ -28,6 +28,26 @@ export default function IndexPage() {
         fetchData()
     }, [])
 
+
+    // const [hoursAgo, setHoursAgo] = useState(updateTime())
+
+    const updateTime = (timeStamp) => {
+        let currentTime = new Date() 
+        timeStamp = new Date(timeStamp) 
+        // currentTime = currentTime.toISOString()
+        const timeDifferenceInMilliseconds = Math.floor(currentTime - timeStamp);
+        let timeDifferenceInHours = Math.floor(timeDifferenceInMilliseconds / (1000 * 60 * 60))
+        console.log("curenttime " + currentTime)
+        console.log("timestamp  " + timeStamp)
+
+        console.log("diff " + timeDifferenceInHours)
+
+        timeDifferenceInHours = timeDifferenceInHours % 24
+
+        return timeDifferenceInHours % 24
+    }
+
+
     let usnm
     let usid
 
@@ -145,7 +165,7 @@ export default function IndexPage() {
                         <div className="postpage h-[83%] overflow-y-scroll flex justify-center">
                             <div className="w-[80%] space-y-6">
                                 {posts.map((post, index) => (
-                                    <Post key={index} username={post.username} time={post.time} comments={post.comments} likes={post.likes} caption={post.caption} imageURL={post.imageURL}/>
+                                    <Post key={index} username={post.username} time={updateTime(post.createdAt)} comments={post.comments} likes={post.likes} caption={post.caption} imageURL={post.imageURL} postId={post._id}/>
                                 ))}
                             </div>
                         </div>
@@ -209,11 +229,18 @@ export default function IndexPage() {
     );
 }
 
-const Post = ({ username, time, comments, likes, caption, imageURL}) => {
+const Post = ({ username, time, comments, likes, caption, imageURL, postId}) => {
 
     // const withPath = imageURL ? `../src/assets/${imageURL}` : skyJean
 
     const withPath = imageURL? 'http://localhost:4000/uploads/' + imageURL : skyJean
+
+    const likeFunc = () => {
+
+        const data = axios.put('/like', { postId })
+        console.log("click")
+
+    }
 
     return (
         <div className="space-y-[0.4rem] font-[300]">
@@ -226,7 +253,7 @@ const Post = ({ username, time, comments, likes, caption, imageURL}) => {
                         {username}
                     </div>
                     <div className="text-slate-400">
-                        {time}
+                        {time}h
                     </div>
                 </div>
             </div>
@@ -234,7 +261,7 @@ const Post = ({ username, time, comments, likes, caption, imageURL}) => {
                 <img className="rounded-[0.8rem]" src={withPath} alt="" />   
             </div>
             <div className="flex text-[] space-x-4">
-                <span className="material-symbols-rounded text-[28px]">
+                <span className="material-symbols-rounded text-[28px] cursor-default" onClick={() => likeFunc() }>
                     favorite
                 </span>
                 <span className="material-symbols-rounded text-[28px]">
