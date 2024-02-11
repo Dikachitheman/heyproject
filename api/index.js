@@ -73,7 +73,7 @@ app.post('/login', async (req, res) => {
                 if (err) {
                     console.log('wtf')
                 } else {
-                    res.cookie('token', token).json(userDoc)
+                    res.cookie('token', token, { sameSite: 'none', secure: true}).json(userDoc)
                 }
             } )
             // res.cookie('token', '').json(userDoc)
@@ -126,6 +126,25 @@ app.post('/posts', async (req, res) => {
      })
 
      console.log(username)
+})
+
+app.put('/like', async (req, res) => {
+
+    const { postId } = req.body
+
+    console.log(postId)
+
+    let post = await Posts.findById(postId)
+    console.log(post.likes)
+    console.log("click")
+
+    newPostLikes = post.likes + 1
+
+    await Posts.findByIdAndUpdate(postId, {
+        likes: newPostLikes
+    })
+
+
 })
 
 app.get('/profile', (req, res) => {

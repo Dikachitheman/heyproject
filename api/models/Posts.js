@@ -3,12 +3,12 @@ const {Schema} = mongoose
 
 const PostSchema = new Schema ({
     username: String,
-    time: String,
+    time: Date,
     caption: String,
     comments: String,
-    likes: String,
+    likes: Number,
     imageURL: String
-}) 
+}, { timestamps: true }) 
 
 const PostModel = mongoose.model('Posts', PostSchema)
 
