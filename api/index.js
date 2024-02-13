@@ -66,10 +66,14 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
     const {email, password} = req.body
     const userDoc = await User.findOne({email})
+    const username = userDoc.name
+
+    console.log(userDoc)
+
     if (userDoc) {
         const passOk = bcrypt.compareSync(password, userDoc.password)
         if (passOk) {
-            jwt.sign({email:userDoc.email, id:userDoc._id}, jwtSecret, {}, (err, token) => {
+            jwt.sign({email:userDoc.email, id:userDoc._id, username}, jwtSecret, {}, (err, token) => {
                 if (err) {
                     console.log('wtf')
                 } else {
@@ -85,6 +89,19 @@ app.post('/login', async (req, res) => {
     else {
         res.json('not found')
     }
+})
+
+app.get('/profile', (req, res) => {
+    const {token} = req.cookies
+    if (token) {
+        jwt.verify(token, jwtSecret, {}, (err, user) => {
+            if (err) throw err
+            res.json(user)
+        })
+    } else {
+        res.json(null)
+    }
+    // res.json({token})
 })
 
 app.get('/posts', async (req, res) => {
@@ -147,17 +164,5 @@ app.put('/like', async (req, res) => {
 
 })
 
-app.get('/profile', (req, res) => {
-    const {token} = req.cookies
-    if (token) {
-        jwt.verify(token, jwtSecret, {}, (err, user) => {
-            if (err) throw err
-            res.json(user)
-        })
-    } else {
-        res.json(null)
-    }
-    // res.json({token})
-})
 
 app.listen(4000)
