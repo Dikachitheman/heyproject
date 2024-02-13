@@ -48,11 +48,11 @@ export default function IndexPage() {
     }
 
 
-    let usnm
+    // let usnm
     let usid
 
     if (user) {
-        usnm = user.name
+        // usnm = user.name
         usid = user._id
     }
 
@@ -69,7 +69,7 @@ export default function IndexPage() {
                             <img className="h-10" src={logo} alt=""></img>
                             <div>
                                 {!!user && (
-                                    <div>{usnm}</div>
+                                    <div>{user}</div>
                                 )}
                             </div>
                         </div>

@@ -9,10 +9,15 @@ export function UserContextProvider({children}) {
     useEffect(() => {
         if (!user) {
             axios.get('/profile').then(({data}) => {
-                setUser(data)
+                setUser(data.username)
+                console.log(data)
+                console.log(data.username)
+                // console.log(user)
             })
         }
-    }, [])
+    }, [user])
+    
+
     return (
         <UserContext.Provider value={{user, setUser}}>
             {children}
