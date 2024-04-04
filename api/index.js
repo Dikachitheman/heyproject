@@ -64,11 +64,13 @@ app.post('/register', async (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
-    const {email, password} = req.body
+    const {emailadr, password} = req.body
+    email = emailadr
     const userDoc = await User.findOne({email})
-    const username = userDoc.name
+    const username = userDoc.username
 
     console.log(userDoc)
+    console.log("from /login")
 
     if (userDoc) {
         const passOk = bcrypt.compareSync(password, userDoc.password)
@@ -97,6 +99,8 @@ app.get('/profile', (req, res) => {
         jwt.verify(token, jwtSecret, {}, (err, user) => {
             if (err) throw err
             res.json(user)
+            console.log(user)
+            console.log("user from /profile")
         })
     } else {
         res.json(null)
@@ -113,7 +117,7 @@ app.get('/posts', async (req, res) => {
 
 app.post('/posts', async (req, res) => {
 
-    const { myId, time, caption, comments, likes, imageURL} = req.body
+    const { myId, time, caption, comments, likes, imageURL } = req.body
 
 
     // https://miro.medium.com/v2/resize:fit:828/format:webp/0*caMUvI_Yndd5w3S5
@@ -129,9 +133,11 @@ app.post('/posts', async (req, res) => {
 
     res.json("\\uploads\\" + newName)
 
-    const data = await User.findById(myId, 'name')
-
-    username = data.name
+    const data = await User.findById(myId)
+    console.log(myId)
+    console.log("data from /posts")
+    console.log(data)
+    username = data.username
 
     const postAdd = await Posts.create({
         username,

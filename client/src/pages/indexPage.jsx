@@ -16,6 +16,7 @@ import axios from "axios"
 export default function IndexPage() {
 
     const { user } = useContext(UserContext)
+    const { usid } = useContext(UserContext)
     const [posts, setPosts] = useState([])
 
     useEffect(() => {
@@ -37,10 +38,10 @@ export default function IndexPage() {
         // currentTime = currentTime.toISOString()
         const timeDifferenceInMilliseconds = Math.floor(currentTime - timeStamp);
         let timeDifferenceInHours = Math.floor(timeDifferenceInMilliseconds / (1000 * 60 * 60))
-        console.log("curenttime " + currentTime)
-        console.log("timestamp  " + timeStamp)
+        // console.log("curenttime " + currentTime)
+        // console.log("timestamp  " + timeStamp)
 
-        console.log("diff " + timeDifferenceInHours)
+        // console.log("diff " + timeDifferenceInHours)
 
         timeDifferenceInHours = timeDifferenceInHours % 24
 
@@ -49,11 +50,12 @@ export default function IndexPage() {
 
 
     // let usnm
-    let usid
 
     if (user) {
         // usnm = user.name
-        usid = user._id
+        console.log(usid)
+        console.log(user)
+        console.log("usiddd")
     }
 
     const [buttonPopup, setButtonPopup] = useState(false)
@@ -69,8 +71,9 @@ export default function IndexPage() {
                             <img className="h-10" src={logo} alt=""></img>
                             <div>
                                 {!!user && (
-                                    <div>{user}</div>
+                                    <div>{user}</div>  
                                 )}
+                                <div>{usid}</div>
                             </div>
                         </div>
                     </div>
@@ -235,10 +238,12 @@ const Post = ({ username, time, comments, likes, caption, imageURL, postId}) => 
 
     const withPath = imageURL? 'http://localhost:4000/uploads/' + imageURL : skyJean
 
+    const [ liked, setLiked ] = useState(false)
     const likeFunc = () => {
 
         const data = axios.put('/like', { postId })
         console.log("click")
+        setLiked(!liked)
 
     }
 
@@ -261,7 +266,7 @@ const Post = ({ username, time, comments, likes, caption, imageURL, postId}) => 
                 <img className="rounded-[0.8rem]" src={withPath} alt="" />   
             </div>
             <div className="flex text-[] space-x-4">
-                <span className="material-symbols-rounded text-[28px] cursor-default" onClick={() => likeFunc() }>
+                <span className={`material-symbols-rounded text-[28px] cursor-default ${liked ? 'text-red-500' : 'text-white'}`} onClick={() => likeFunc()}>
                     favorite
                 </span>
                 <span className="material-symbols-rounded text-[28px]">

@@ -5,18 +5,26 @@ import { UserContext } from "../UserContext"
 
 export default function LoginPage() {
 
-    const [email, setEmail] = useState('')
+    const [emailadr, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [redirect, setRedirect] = useState(false)
 
-    const {setUser} =  useContext(UserContext)
+    const {setUser,setUsid} =  useContext(UserContext)
 
     async function handleLoginSubmit(ev) {
         ev.preventDefault()
-        const response = await axios.post('/login', {email, password})
-        setUser(response.data)
+        const response = await axios.post('/login', {emailadr, password})
+        console.log(response.data)
+        console.log("login")
+        const { username, _id, email } = response.data
+        console.log(_id)
+        console.log("id")
+        setUser( username )
+        setUsid( _id )
         setRedirect(true)
     }
+
+    
 
     if (redirect) {
         return <Navigate to={'/'} />
@@ -26,7 +34,7 @@ export default function LoginPage() {
         <div className="mt-4">
             <form onSubmit={handleLoginSubmit}>
                 <input type="email" placeholder={"email"}
-                value={email} 
+                value={emailadr} 
                 onChange={ev => setEmail(ev.target.value)}/>
 
                 <input type="password" placeholder={"password"}
