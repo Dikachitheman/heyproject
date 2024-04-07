@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
 const imageDownloader = require('image-downloader')
+const multer = require('multer'); // For handling multipart/form-data
 
 require('dotenv').config()
 
@@ -153,22 +154,105 @@ app.post('/posts', async (req, res) => {
 
 app.put('/like', async (req, res) => {
 
-    const { postId } = req.body
+    const { postId, usid, liked } = req.body;
 
-    console.log(postId)
-
-    let post = await Posts.findById(postId)
-    console.log(post.likes)
-    console.log("click")
-
-    newPostLikes = post.likes + 1
-
-    await Posts.findByIdAndUpdate(postId, {
-        likes: newPostLikes
-    })
-
-
+    try {
+      const post = await Posts.findById(postId);
+    
+      if (!post) {
+        return res.status(404).json({ message: "Post not found." });
+      }
+    
+      if (liked) {
+        post.likes.push(usid); // Directly update post.likes
+      } else {
+        const updatedLikes = post.likes.filter((like) => like !== usid);
+        post.likes = updatedLikes;
+      }
+      
+      console.log(post.likes)
+      console.log(liked)
+      await post.save(); // Save the updated post
+    
+      const updatedPost = await Posts.findById(postId).select('-_id likes'); // Get updated post with only "likes" field
+    
+      res.json({ likesCount: updatedPost.likes.length, updatedPost }); // Send response with updated data
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error." });
+    }
+    
 })
 
+// const { ObjectId } = require('mongoose'); // Required for type conversion
+
+app.get('/likes/:postid', async (req, res) => {
+  try {
+    const { postid } = req.params;
+
+    const post = await Posts.findById(postid).select('likes');
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found." });
+    }
+
+    const userIds = post.likes.map(id => mongoose.Types.ObjectId(id)); // Convert to ObjectIds
+    console.log(userIds)
+    console.log("////")
+    // Fetch user data in one query (optimization)
+    const users = await Users.find({ _id: { $in: userIds } })
+      .select('username displayImageUrl');
+
+    const likedUsers = users.map(user => ({
+      username: user.username,
+      displayImageUrl: user.displayImageUrl,
+    }));
+
+    res.json(likedUsers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+// Configure Multer for image uploads (adjust storage options as needed)
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, 'uploads/'); // Specify a directory to store uploaded images (optional)
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + '-' + file.originalname);
+    },
+  });
+  
+const upload = multer({ storage: storage }).array('image'); // Use 'array' for multiple files
+
+app.post('/upload', upload, async (req, res) => {
+try {
+    const imagePaths = []; // Array to store image paths or data URLs
+
+    // Extract image paths/data URLs from the request (adjust based on your setup)
+    if (req.files) {
+    for (const file of req.files) {
+        imagePaths.push(file.path); // If storing images locally
+        // Alternatively, if storing data URLs:
+        // imagePaths.push(req.body.image); // Assuming data URL is in the request body
+    }
+    }
+    console.log("xoxo")
+    console.log(imagePaths)
+
+//   const newImage = new Posts({
+//     imageURL: imagePaths,
+//     // Add other post data here (e.g., caption, date)
+//   });
+
+//   await newImage.save();
+    res.json({ message: 'Images uploaded successfully!' });
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error uploading images.' });
+}
+});
 
 app.listen(4000)
