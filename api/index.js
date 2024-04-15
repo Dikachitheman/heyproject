@@ -11,7 +11,8 @@ const multer = require('multer'); // For handling multipart/form-data
 require('dotenv').config()
 
 const User = require('./models/user.js')
-const Posts = require('./models/Posts.js')
+const Posts = require('./models/Posts.js');
+const { ObjectId } = require('mongodb');
 
 app.use(cors({
     credentials: true,
@@ -196,11 +197,11 @@ app.get('/likes/:postid', async (req, res) => {
       return res.status(404).json({ message: "Post not found." });
     }
 
-    const userIds = post.likes.map(id => mongoose.Types.ObjectId(id)); // Convert to ObjectIds
+    const userIds = post.likes.map(id => new mongoose.Types.ObjectId(id)); // Convert to ObjectIds
     console.log(userIds)
     console.log("////")
     // Fetch user data in one query (optimization)
-    const users = await Users.find({ _id: { $in: userIds } })
+    const users = await User.find({ _id: { $in: userIds } })
       .select('username displayImageUrl');
 
     const likedUsers = users.map(user => ({

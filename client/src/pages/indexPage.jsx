@@ -10,6 +10,7 @@ import dp2 from "../assets/qip2.jpeg"
 import dp3 from "../assets/qip3.jpeg"
 
 import AddPage from "./Add";
+import LikePage from "./Like";
 
 import axios from "axios"
 
@@ -73,7 +74,7 @@ export default function IndexPage() {
                                 {!!user && (
                                     <div>{user}</div>  
                                 )}
-                                <div>{usid}</div>
+                                <div className="text-xl">{usid}</div>
                             </div>
                         </div>
                     </div>
@@ -168,7 +169,7 @@ export default function IndexPage() {
                         <div className="postpage h-[83%] overflow-y-scroll flex justify-center">
                             <div className="w-[80%] space-y-6">
                                 {posts.map((post, index) => (
-                                    <Post key={index} username={post.username} time={updateTime(post.createdAt)} comments={post.comments} likes={post.likes} caption={post.caption} imageURL={post.imageURL} postId={post._id}/>
+                                    <Post key={index} username={post.username} time={updateTime(post.createdAt)} comments={post.comments} likes={post.likes} caption={post.caption} imageURL={post.imageURL} postId={post._id} usid={usid} />
                                 ))}
                             </div>
                         </div>
@@ -232,18 +233,21 @@ export default function IndexPage() {
     );
 }
 
-const Post = ({ username, time, comments, likes, caption, imageURL, postId}) => {
+const Post = ({ username, time, comments, likes, caption, imageURL, postId, usid}) => {
 
     // const withPath = imageURL ? `../src/assets/${imageURL}` : skyJean
 
     const withPath = imageURL? 'http://localhost:4000/uploads/' + imageURL : skyJean
 
     const [ liked, setLiked ] = useState(false)
-    const likeFunc = () => {
+    const [ likesCount, setLikesCount ] = useState(0)
+    const [likeButtonPopup, setLikeButtonPopup] = useState(false)
+    const likeFunc = async () => {
 
-        const data = axios.put('/like', { postId })
-        console.log("click")
         setLiked(!liked)
+        const data = await axios.put('/like', { postId, usid, liked : !liked })
+        setLikesCount(data.data.likesCount)
+        console.log("click")
 
     }
 
@@ -277,8 +281,11 @@ const Post = ({ username, time, comments, likes, caption, imageURL, postId}) => 
                 </span>
             </div>
             <div className="text-[13px]">
-                <div className=" font-[400]">
-                    Liked by bigBooty and {likes} others
+                <div className=" font-[400]" onClick={() => setLikeButtonPopup(true)}>
+                    Liked by bigBooty and {likesCount} others
+                </div>
+                <div>
+                    <LikePage trigger = {likeButtonPopup} setTrigger = {setLikeButtonPopup} postId = {postId} />
                 </div>
                 <div className=" font-[400]">
                     {caption}

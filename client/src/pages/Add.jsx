@@ -1,6 +1,7 @@
 import { useContext, useState } from "react"
 import {Link, Navigate} from "react-router-dom"
 import axios from 'axios'
+import ImageUpload from "./uploadImg"
 
 export default function AddPage( props ) {
 
@@ -38,7 +39,7 @@ export default function AddPage( props ) {
 
     return ( props.trigger ) ? (
         <>
-        <div className=" z-30 absolute rounded-[10px] bg-neutral-800 h-[60vh] w-[30vw] top-[20vh] left-[35vw] flex items-center justify-center ">
+        <div className=" z-30 absolute rounded-[10px] bg-neutral-800 h-[70vh] w-[50vw] top-[20vh] left-[35vw] flex items-center justify-center ">
            
             <form className="flex flex-col mt-[30px] text-black">
                 <input placeholder={"caption"}
@@ -77,6 +78,8 @@ export default function AddPage( props ) {
                     ))
                 }
             </div>
+
+            <ImageUpload />
 
         </div>
 
