@@ -169,7 +169,10 @@ export default function IndexPage() {
                         <div className="postpage h-[83%] overflow-y-scroll flex justify-center">
                             <div className="w-[80%] space-y-6">
                                 {posts.map((post, index) => (
-                                    <Post key={index} username={post.username} time={updateTime(post.createdAt)} comments={post.comments} likes={post.likes} caption={post.caption} imageURL={post.imageURL} postId={post._id} usid={usid} />
+                                    <Post key={index} username={post.username} 
+                                    time={updateTime(post.createdAt)} comments={post.comments} 
+                                    likes={post.likes} caption={post.caption} imageURL={post.imageURL} 
+                                    postId={post._id} usid={usid} />
                                 ))}
                             </div>
                         </div>
@@ -270,8 +273,12 @@ const Post = ({ username, time, comments, likes, caption, imageURL, postId, usid
                 <img className="rounded-[0.8rem]" src={withPath} alt="" />   
             </div>
             <div className="flex text-[] space-x-4">
-                <span className={`material-symbols-rounded text-[28px] cursor-default ${liked ? 'text-red-500' : 'text-white'}`} onClick={() => likeFunc()}>
-                    favorite
+                <span className={`material-symbols-rounded text-[28px] cursor-default 
+                ${liked ? 'text-red-500' : 'text-white'}`} onClick={() => likeFunc()}>
+                    favorite 
+                    {
+                        //like icon
+                    }
                 </span>
                 <span className="material-symbols-rounded text-[28px]">
                     Mode_Comment

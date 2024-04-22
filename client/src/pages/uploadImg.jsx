@@ -18,7 +18,7 @@ const CLOUDINARY_URL="cloudinary://426192398468526:_XEvOs1OT6YjvStWsmt2WSYMhS4@d
 
 
 
-function ImageUpload() {
+function ImageUpload( props ) {
     let files = [] 
     const [selectedImages, setSelectedImages] = useState([]); // Array for multiple images
     const [message, setMessage] = useState('');
@@ -41,7 +41,7 @@ function ImageUpload() {
         }
     };
 
-    const [publicId, setPublicId] = useState(null)
+    const [publicId, setPublicId] = useState("null")
 
     const UploadWidget = () => {
         const cloudinaryRef = useRef()
@@ -51,18 +51,21 @@ function ImageUpload() {
             widgetRef.current = cloudinaryRef.current.createUploadWidget({
                 cloudName: "dfagovcfl",
                 uploadPreset: "kug0sp2o",
-                publicId: () => { 
-                    const timestamp = Date.now();
-                    return `my-custom-prefix-${timestamp}`;
-                }, 
+                publicId: "bnxs79hd0shhx"
+                    // () => { 
+                    //     const timestamp = Date.now();
+                    //     return `my-custom-prefix-${timestamp}`;
+                    // }
+                    , 
                 function (error, result) {
-                    if (error) {
-                        console.error("Upload error:", error);
-                    } else {
-                        console.log("Upload result:", result);
+                    // if (error) {
+                        // console.error("Upload error:", error);
+                    // } else {
+                        console.log("Upload result:", result.info);
                         const uploadedFile = result.info;
-                        setPublicId(uploadedFile.public_id); // Update state with uploaded public ID
-                    }
+                        setPublicId(uploadedFile.public_id);
+                        console.log(publicId) // Update state with uploaded public ID
+                    // }
                 }
             });
         }, []);
@@ -87,14 +90,18 @@ function ImageUpload() {
         for (const image of selectedImages) {
             console.log(image)
             formData.append('image', image); // Add each image to the form data
+            formData.append('myId', props.myId)
         }
 
         try {
-        const response = await axios.post('/upload', formData, {
-            headers: {
-            'Content-Type': 'multipart/form-data',
-            },
-        });
+        const response = await axios.post('/upload', formData, 
+                // myId: props.myId
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
 
         setMessage(response.data.message); // Replace with your backend response message
         setSelectedImages([]); // Clear state after successful upload
@@ -115,9 +122,9 @@ function ImageUpload() {
         const myImg = cld.image(publicId)
         new CloudinaryImage(myImg).resize(
             pad()
-                .width(1500)
-                .aspectRatio(ar16X9)
-                .background(generativeFill())
+            .width(1500)
+            .aspectRatio(ar16X9)
+            .background(generativeFill())
         )
         settransformedUrl(myImg);
     }
@@ -183,6 +190,7 @@ function ImageUpload() {
 
             <p>{message}</p>
         </div>
+        { publicId && (<div> public id {publicId} </div>)}
 
         <div className='flex-col ml-7'>
             <div>

@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
 const imageDownloader = require('image-downloader')
 const multer = require('multer'); // For handling multipart/form-data
+const fs = require('fs')
 
 require('dotenv').config()
 
@@ -217,43 +218,76 @@ app.get('/likes/:postid', async (req, res) => {
 });
 
 // Configure Multer for image uploads (adjust storage options as needed)
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'uploads/'); // Specify a directory to store uploaded images (optional)
-    },
-    filename: (req, file, cb) => {
-      cb(null, Date.now() + '-' + file.originalname);
-    },
-  });
-  
-const upload = multer({ storage: storage }).array('image'); // Use 'array' for multiple files
-
-app.post('/upload', upload, async (req, res) => {
-try {
-    const imagePaths = []; // Array to store image paths or data URLs
-
-    // Extract image paths/data URLs from the request (adjust based on your setup)
-    if (req.files) {
-    for (const file of req.files) {
-        imagePaths.push(file.path); // If storing images locally
-        // Alternatively, if storing data URLs:
-        // imagePaths.push(req.body.image); // Assuming data URL is in the request body
-    }
-    }
-    console.log("xoxo")
-    console.log(imagePaths)
-
-//   const newImage = new Posts({
-//     imageURL: imagePaths,
-//     // Add other post data here (e.g., caption, date)
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//       cb(null, 'uploads/'); // Specify a directory to store uploaded images (optional)
+//     },
+//     filename: (req, file, cb) => {
+//       cb(null, Date.now() + '-' + file.originalname);
+//     },
 //   });
+  
+// const upload = multer({ storage: storage }).array('image'); // Use 'array' for multiple files
 
-//   await newImage.save();
-    res.json({ message: 'Images uploaded successfully!' });
-} catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error uploading images.' });
-}
-});
+// app.post('/upload', upload, async (req, res) => {
+//     const { myId } = req.body
+
+//     try {
+//         const imagePaths = []; // Array to store image paths or data URLs
+
+//         // Extract image paths/data URLs from the request (adjust based on your setup)
+//         if (req.files) {
+//         for (const file of req.files) {
+//             imagePaths.push(file.path); // If storing images locally
+//             // Alternatively, if storing data URLs:
+//             // imagePaths.push(req.body.image); // Assuming data URL is in the request body
+//         }
+//         }
+//         console.log("xoxo")
+//         console.log(imagePaths)
+
+//     //   const newImage = new Posts({
+//     //     imageURL: imagePaths,
+//     //     // Add other post data here (e.g., caption, date)
+//     //   });
+
+//     //   await newImage.save();
+
+//         // const data = await User.findById(myId)
+//         // console.log(myId)
+//         // console.log("data from /posts")
+//         // console.log(data)
+//         // username = data.username
+
+//         // const postAdd = await Posts.create({
+//             // username,
+//             // time,
+//             // caption,
+//             // comments,
+//             // likes,
+//             // imageURL: newName
+//         // })
+
+//         res.json({ message: 'Images uploaded successfully!' });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: 'Error uploading images.' });
+//     }
+// });
+
+const photosMiddleware = multer({dest: 'uploads/'})
+
+app.post('/upload', photosMiddleware.array('image', 100), (req, res) => {
+    const uploadedFiles = []
+    for (let i = 0; i < req.files.length; i++) {
+        const {path, originalname} = req.files[i];
+        const parts = originalname.split('.')
+        const ext = parts[parts.length - 1]
+        const newPath = path + '.' + ext
+        fs.renameSync(path, newPath)
+        uploadedFiles.push(newPath)
+    }
+    res.json(uploadedFiles)
+})
 
 app.listen(4000)

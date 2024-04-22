@@ -14,14 +14,12 @@ export default function AddPage( props ) {
     const [redirect, setRedirect] = useState(false)
     const [addedPhotos, setAddedPhotos] = useState('')
 
-
     async function handleLoginSubmit(ev, myId) {
         ev.preventDefault()
         // const response = await axios.post('/posts', {username, time, caption, comments, likes, imageURL})
         // setRedirect(true)
         
         const {data:filename} = await axios.post('/posts', { myId, caption, comments, likes, imageURL})
-        
         console.log("myId")
         console.log(myId)
         console.log(likes)
@@ -79,7 +77,7 @@ export default function AddPage( props ) {
                 }
             </div>
 
-            <ImageUpload />
+            <ImageUpload myId = {props.myId}/>
 
         </div>
 
